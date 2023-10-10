@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:padding="16dp"
+    android:elevation="4dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical">
+
+
+<!-- Primeira linha com dois TextViews -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- Text View 1 -->
+    <TextView
+        android:id="@+id/embarcar"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Embarcar"
+        android:textSize="18sp"
+        android:layout_marginStart="24sp"/>
+
+    <!-- Text View 2 -->
+    <TextView
+        android:id="@+id/pousar"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Pousar"
+        android:layout_marginStart="2dp"
+        android:textSize="18sp" />
+</LinearLayout>
+
+<!-- Segunda linha com dois TextViews -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- Text View 3 -->
+    <TextView
+        android:id="@+id/Data"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="24sp"
+        android:layout_height="wrap_content"
+        android:text="Data"
+        android:textSize="18sp" />
+
+    <!-- Text View 4 -->
+    <TextView
+        android:id="@+id/Hora"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:text="Hora"
+        android:textSize="18sp" />
+</LinearLayout>
+</LinearLayout>
+    </androidx.cardview.widget.CardView>
