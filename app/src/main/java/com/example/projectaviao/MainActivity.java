@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     String mStringEmail,mStringPassword;
     SharedPreferences mSharedPreferences;
 
-    private boolean isRequeredPassword(){
+    private boolean isRequiredPassword(){
         return TextUtils.isEmpty(mEditTextPassword.getText());
     }
     private boolean isValidEmail(String mStringEmail){
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (isRequeredPassword()) {
+        if (isRequiredPassword()) {
             String mTextMessage = getString(R.string.text_Password_not_valid);
             Toast.makeText(getApplicationContext(), mTextMessage, Toast.LENGTH_SHORT).show();
             return;

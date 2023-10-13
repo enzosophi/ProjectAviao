@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Base64;
 
 public class UserDao {
     public static final String TAG = "CRUD USER";
@@ -17,7 +18,7 @@ public class UserDao {
 
         String mSql;
         try {
-            mSql = "INSERT  INTO Usuario(name, senha, dataNasc, cpf, telefone, genero, nivelAcesso, statusUsuario, email VALUES (?, ?, ?, ?, ?, ?, ?, ?,? )";
+            mSql = "INSERT  INTO Usuario(nome, senha, dataNasc, cpf, telefone, genero, nivelAcesso, statusUsuario, email VALUES (?, ?, ?, ?, ?, ?, ?, ?,? )";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
 
             mPreparedStatement.setString(1, mUser.getUsername());
@@ -45,7 +46,7 @@ public class UserDao {
 
         String mSql;
         try {
-            mSql = "UPDATE usuario SET name=?, senha=?, dataNasc=?, cpf=?, telefone=?, genero=?, nivelAcesso=?, statusUsuario=?, email=? WHERE id=?";
+            mSql = "UPDATE usuario SET NOME=?, senha=?, dataNasc=?, cpf=?, telefone=?, genero=?, nivelAcesso=?, statusUsuario=?, email=? WHERE id=?";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
 
             mPreparedStatement.setString(1, mUser.getUsername());
@@ -112,7 +113,7 @@ public class UserDao {
         String mSql;
 
         try {
-            mSql = "SELECT ID, NAME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO ORDER BY NAME ASC";
+            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO ORDER BY NOME ASC";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
             ResultSet mResultSet = mPreparedStatement.executeQuery();
             mUserList = new ArrayList<User>();
@@ -147,7 +148,7 @@ public class UserDao {
         String mSql;
 
         try {
-            mSql = "SELECT ID, NAME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO WHERE STATUS="+ vStatus +" ORDER BY NAME ASC";
+            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO WHERE STATUS="+ vStatus +" ORDER BY NOME ASC";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
             ResultSet mResultSet = mPreparedStatement.executeQuery();
             mUserList = new ArrayList<User>();
@@ -182,7 +183,7 @@ public class UserDao {
         String mSql;
 
         try {
-            mSql = "SELECT ID, NAME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO WHERE ID="+ vId +" ORDER BY NAME ASC";
+            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO WHERE ID="+ vId +" ORDER BY NOME ASC";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
             ResultSet mResultSet = mPreparedStatement.executeQuery();
             mUserList = new ArrayList<User>();
@@ -217,7 +218,7 @@ public class UserDao {
         String mSql;
 
         try {
-            mSql = "SELECT ID, NAME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, CPF FROM USUARIO WHERE NAME LIKE'%="+ mName +"%' ORDER BY NAME ASC";
+            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, CPF FROM USUARIO WHERE NOME LIKE'%="+ mName +"%' ORDER BY NOME ASC";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
             ResultSet mResultSet = mPreparedStatement.executeQuery();
             mUserList = new ArrayList<User>();
@@ -250,10 +251,11 @@ public class UserDao {
 
 public static  String authenticateUser(User mUser, Context mContext){
         String mResponse="";
-        String mSql="SELECT id,fullname,email,password FROM usuario WHERE password = ? AND email = ?";
+        String mSql="SELECT id,nome,email,senha FROM usuario WHERE senha = ? AND email = ?";
         try{
+            String codedPassword = Base64.getEncoder().encodeToString(mUser.getPassword().getBytes("utf-8"));
             PreparedStatement mPreparedStatement =MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-            mPreparedStatement.setString(1, mUser.getPassword());
+            mPreparedStatement.setString(1, codedPassword);
             mPreparedStatement.setString(2, mUser.getmEmail());
             ResultSet mResultSet= mPreparedStatement.executeQuery();
             while (mResultSet.next()){

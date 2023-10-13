@@ -1,4 +1,4 @@
-package com.example.projectaviao;
+/*package com.example.projectaviao;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,7 @@ if(viewType == DISPLAY_SEARCH){
     mView= LayoutInflater.from(parent.getContext()).inflate(R.layout.info_viagem_fragment,parent,false);
     return new MovieViewHolder(mView ,mOnMovieListenner);
 } else{
-    mView= LayoutInflater.from()
+    mView= LayoutInflater.from();
 }
 
         return null;
@@ -45,4 +45,4 @@ if(viewType == DISPLAY_SEARCH){
     public int getItemCount() {
         return 0;
     }
-}
+}*/
