@@ -1,185 +1,105 @@
 package com.example.projectaviao;
 
 public class User {
-
-    public static final String TAG="User Table";
-
-    public User(int anInt, String string, String string1, String string2, String string3, String string4, String string5, String String6, String string7, String string8) {
-    }
+    private int id;
+    private String nome;
+    private String email;
+    private String senha;
+    private String dataNasc;
+    private String cpf;
+    private String telefone;
+    private byte[] foto; // Para campos de tipo varbinary (neste caso, a foto)
+    private String genero;
 
     public User(String mStringEmail, String mStringPassword) {
-        mEmail=mStringEmail;
-        mPassword=mStringPassword;
-
+        this.email = mStringEmail;
+        this.senha = mStringPassword;
     }
 
 
-
-
-//nome, email, senha, dataNasc, cpf, telefone,genero, nivelAcesso, statusUsuario
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "mId=" + mId +
-                ", mUsername='" + mUsername + '\'' +
-                ", mDatenasc='" + mDatenasc + '\'' +
-                ", mCpf='" + mCpf + '\'' +
-                ", mUsertel='" + mUsertel + '\'' +
-                ", mUsergender=" + mUsergender +
-                ", mUserAccess='" + mUserAccess + '\'' +
-                ", mUserStatus='" + mUserStatus + '\'' +
-                ", mResetPassword=" + mResetPassword +
-                ", mPassword" + mPassword + '\'' +
-                ", mEmail='" + mEmail + '\'' +
-                '}';
-    }
-
-    public User(String nome, String email, String cpf, String telefone, String genero) {
-        this.mUsername = nome;
-        this.mEmail = email;
-        this.mCpf = cpf;
-        this.mUsertel = telefone;
-        this.mUsergender = genero;
-    }
-
-    public User(int id, String username, Long datenasc, String cpf, String usertel, String usergender, String userAccess, String userStatus, String resetPassword, String password, String email) {
-        this.mId = id;
-        this.mUsername = username;
-        this.mDatenasc = datenasc;
-        this.mCpf = cpf;
-        this.mUsertel = usertel;
-        this.mUsergender = usergender;
-        this.mUserAccess = userAccess;
-        this.mUserStatus = userStatus;
-        this.mResetPassword = resetPassword;
-        this.mPassword = password;
-        this.mEmail = email;
-
-    }
-
-    //colunas
-    private int mId;
 
     public int getId() {
-        return mId;
+        return id;
     }
 
     public void setId(int id) {
-        this.mId = id;
+        this.id = id;
     }
 
-    public String getUsername() {
-        return mUsername;
+    public String getNome() {
+        return nome;
     }
 
-    public void setUsername(String mUsername) {
-        this.mUsername = mUsername;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public Long getDatenasc() {
-        return mDatenasc;
+    public String getEmail() {
+        return email;
     }
 
-    public void setDatenasc(Long mDatenasc) {
-        this.mDatenasc = mDatenasc;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getmPassword() {
-//        return Classe.transf(mPassword);
-
-        return mPassword;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setmPassword(String mPassword) {
-//        String senhaCrip = Classe.transf(mPassword);
-//        this.mPassword = senhaCrip;
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-        this.mPassword = mPassword;
+    public String getDataNasc() {
+        return dataNasc;
+    }
+
+    public void setDataNasc(String dataNasc) {
+        this.dataNasc = dataNasc;
     }
 
     public String getCpf() {
-        return mCpf;
+        return cpf;
     }
 
-    public void setCpf(String mCpf) {
-        this.mCpf = mCpf;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
-    public String getUsertel() {
-        return mUsertel;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public String getmEmail() {
-        return mEmail;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
+    public byte[] getFoto() {
+        return foto;
     }
 
-    public void setUsertel(String mUsertel) {
-        this.mUsertel = mUsertel;
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
     }
 
-    public String getUsergender() {
-        return mUsergender;
+    public String getGenero() {
+        return genero;
     }
 
-    public void setUsergender(String mUsergender) {
-        this.mUsergender = mUsergender;
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
 
-    public String getUserAccess() {
-        return mUserAccess;
+    public User(int id, String nome, String email, String senha, String dataNasc, String cpf, String telefone, byte[] foto, String genero) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.dataNasc = dataNasc;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.foto = foto;
+        this.genero = genero;
     }
-
-    public void setUserAccess(String mUserAccess) {
-        this.mUserAccess = mUserAccess;
-    }
-
-    public String getUserStatus() {
-        return mUserStatus;
-    }
-
-    public void setUserStatus(String mUserStatus) {
-        this.mUserStatus = mUserStatus;
-    }
-
-    public String getmUsername() {
-        return mUsername;
-    }
-
-    public void setmUsername(String mUsername) {
-        this.mUsername = mUsername;
-    }
-
-    public String getResetPassword() {
-        return mResetPassword;
-    }
-
-    public void setResetPassword(String mResetPassword) {this.mResetPassword = mResetPassword;}
-
-    public String getPassword() {
-        return mPassword;
-    }
-
-    public void setPassword( String mPassword) {
-        this.mPassword = mPassword;
-    }
-
-
-    private Long mDatenasc;
-    private String mCpf;
-    private String mUsertel;
-    private String mUsergender;
-    private String mUserAccess;
-    private String mUserStatus;
-    private String mResetPassword;
-    private String mUsername;
-    private String mPassword;
-    private String mEmail;
-
-
 
 }

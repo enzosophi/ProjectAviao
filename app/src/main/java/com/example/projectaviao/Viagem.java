@@ -4,92 +4,98 @@ public class Viagem {
 
     public static final String TAG="Viagem Table";
 
-    public Viagem(int anInt, String string, String string1, String string2, String string3, String string4, Long anlong) {
-    }
+    private int id;
+    private String partida;
+    private String destino;
+    private String situacao;
+    private String dataViagem;
+    private String horarioViagem;
+    private int idAero;
+    private int idUsuario;
+    private int quantidadePassageiros;
 
-    @Override
-    public String toString() {
-        return "Viagem{" +
-                "mId=" + mId +
-                ", mChegada='" + mChegada + '\'' +
-                ", mSaida='" + mSaida + '\'' +
-                ", mPassageiroName='" + mPassageiroName + '\'' +
-                ", mPassageiroCpf='" + mPassageiroCpf + '\'' +
-                ", mData='" + mData + '\'' +
-                '}';
-    }
-
-    public Viagem(int Id, String Chegada, String Saida, String PassageiroName, String PassageiroCpf, Long Data) {
-        this.mId = Id;
-        this.mChegada = Chegada;
-        this.mSaida = Saida;
-        this.mPassageiroName = PassageiroName;
-        this.mPassageiroCpf = PassageiroCpf;
-        this.mData= Data;
-    }
-
-    public Viagem(String Chegada, String Saida, String PassageiroName, String PassageiroCpf, Long Data) {
-        this.mChegada = Chegada;
-        this.mSaida = Saida;
-        this.mPassageiroName = PassageiroName;
-        this.mPassageiroCpf = PassageiroCpf;
-        this.mData= Data;
+    // Construtor da classe
+    public Viagem(int id, String partida, String destino, String situacao, String dataViagem, String horarioViagem, int idAero, int idUsuario, int quantidadePassageiros) {
+        this.id = id;
+        this.partida = partida;
+        this.destino = destino;
+        this.situacao = situacao;
+        this.dataViagem = dataViagem;
+        this.horarioViagem = horarioViagem;
+        this.idAero = idAero;
+        this.idUsuario = idUsuario;
+        this.quantidadePassageiros = quantidadePassageiros;
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 
-    public void setId(int mId) {
-        this.mId = mId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getChegada() {
-        return mChegada;
+    public String getPartida() {
+        return partida;
     }
 
-    public void setChegada(String mChegada) {
-        this.mChegada = mChegada;
+    public void setPartida(String partida) {
+        this.partida = partida;
     }
 
-    public String getSaida() {
-        return mSaida;
+    public String getDestino() {
+        return destino;
     }
 
-    public void setSaida(String mSaida) {
-        this.mSaida = mSaida;
+    public void setDestino(String destino) {
+        this.destino = destino;
     }
 
-    public String getPassageiroName() {
-        return mPassageiroName;
+    public String getSituacao() {
+        return situacao;
     }
 
-    public void setPassageiroName(String mPassageiroName) {
-        this.mPassageiroName = mPassageiroName;
+    public void setSituacao(String situacao) {
+        this.situacao = situacao;
     }
 
-    public String getPassageiroCpf() {
-        return mPassageiroCpf;
+    public String getDataViagem() {
+        return dataViagem;
     }
 
-    public void setPassageiroCpf(String mPassageiroCpf) {
-        this.mPassageiroCpf = mPassageiroCpf;
+    public void setDataViagem(String dataViagem) {
+        this.dataViagem = dataViagem;
     }
 
-    public Long getData() {
-        return mData;
+    public String getHorarioViagem() {
+        return horarioViagem;
     }
 
-    public void setData(Long mData) {
-        this.mData = mData;
+    public void setHorarioViagem(String horarioViagem) {
+        this.horarioViagem = horarioViagem;
     }
 
-    private int mId;
-    private String mChegada;
-    private String mSaida;
-    private String mPassageiroName;
-    private String mPassageiroCpf;
-    private Long mData;
+    public int getIdAero() {
+        return idAero;
+    }
 
+    public void setIdAero(int idAero) {
+        this.idAero = idAero;
+    }
 
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public int getQuantidadePassageiros() {
+        return quantidadePassageiros;
+    }
+
+    public void setQuantidadePassageiros(int quantidadePassageiros) {
+        this.quantidadePassageiros = quantidadePassageiros;
+    }
 }

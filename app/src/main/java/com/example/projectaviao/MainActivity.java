@@ -21,6 +21,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
 
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mTextViewForgotPassword;
     Button mButtonLogin, mWebConnector;
 
+    private BottomNavigationView bottomNavigationView;
     EditText mEditTextEmail, mEditTextPassword;
     String mStringEmail,mStringPassword;
     SharedPreferences mSharedPreferences;
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
       
     }
     private void showProduct(){
-        Intent mIntent = new Intent(getApplicationContext() , HomeActivity.class);
+        Intent mIntent = new Intent(getApplicationContext() , HomeFragment.class);
         startActivity(mIntent);
         finish();
     }
@@ -89,8 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor mEditor = mSharedPreferences.edit();
                 mEditor.putString("logged", "True");
                 mEditor.putString("Email", mStringEmail);
-                mEditor.putString("Password", mResponse);
-                mEditor.putString("UserID", userId); // ID do usuário
+
                 mEditor.apply();
 
                 // Clicou no botão vai para a tela HomeActivity
@@ -185,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         // Inicia a atividade do navegador
         startActivity(intent);
     }
+
 
 
 }

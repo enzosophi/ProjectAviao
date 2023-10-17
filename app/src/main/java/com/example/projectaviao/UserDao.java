@@ -1,10 +1,13 @@
 package com.example.projectaviao;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Base64;
@@ -18,18 +21,16 @@ public class UserDao {
 
         String mSql;
         try {
-            mSql = "INSERT  INTO Usuario(nome, senha, dataNasc, cpf, telefone, genero, nivelAcesso, statusUsuario, email VALUES (?, ?, ?, ?, ?, ?, ?, ?,? )";
+            mSql = "INSERT  INTO Usuario(nome, senha, dataNasc, cpf, telefone, genero, email VALUES (?, ?, ?, ?, ?, ?, ? )";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
 
-            mPreparedStatement.setString(1, mUser.getUsername());
-            mPreparedStatement.setString(2, mUser.getPassword());
-            mPreparedStatement.setLong(3, mUser.getDatenasc());
+            mPreparedStatement.setString(1, mUser.getNome());
+            mPreparedStatement.setString(2, mUser.getSenha());
+            mPreparedStatement.setString(3, mUser.getDataNasc());
             mPreparedStatement.setString(4, mUser.getCpf());
-            mPreparedStatement.setString(5, mUser.getUsertel());
-            mPreparedStatement.setString(6, mUser.getUsergender());
-            mPreparedStatement.setString(7, mUser.getUserAccess());
-            mPreparedStatement.setString(8, mUser.getResetPassword());
-            mPreparedStatement.setString(9, mUser.getmEmail());
+            mPreparedStatement.setString(5, mUser.getTelefone());
+            mPreparedStatement.setString(6, mUser.getGenero());
+            mPreparedStatement.setString(7, mUser.getEmail());
 
             vResponse = mPreparedStatement.executeUpdate(); //1 se foi com sucesso
 
@@ -39,6 +40,37 @@ public class UserDao {
         }
 
         return vResponse;
+    }
+
+    public int getUserIdByEmail(String email, Context mContext) {
+        int userId = -1;  // Valor padrão caso o email não seja encontrado
+
+        String mSql = "SELECT id FROM Usuario WHERE email = ?";
+        try (PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);) {
+            mPreparedStatement.setString(1, email);
+            ResultSet resultSet = mPreparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                userId = resultSet.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userId;
+    }
+
+    public void saveUserIdByEmailInSharedPreferences(String email, Context mContext) {
+        int userId = getUserIdByEmail(email, mContext); // Obtém o ID do usuário
+
+        if (userId != -1) {
+            // ID do usuário válido, armazene-o nas SharedPreferences
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("UserId", userId);
+            editor.apply();
+        } else {
+
+        }
     }
 
     public static int updateUser(User mUser, Context mContext) {
@@ -46,19 +78,17 @@ public class UserDao {
 
         String mSql;
         try {
-            mSql = "UPDATE usuario SET NOME=?, senha=?, dataNasc=?, cpf=?, telefone=?, genero=?, nivelAcesso=?, statusUsuario=?, email=? WHERE id=?";
+            mSql = "UPDATE Usuario SET nome=?, senha=?, dataNasc=?, cpf=?, telefone=?, genero=?, email=? WHERE id=?";
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
 
-            mPreparedStatement.setString(1, mUser.getUsername());
-            mPreparedStatement.setString(2, mUser.getPassword());
-            mPreparedStatement.setLong(3, mUser.getDatenasc());
+            mPreparedStatement.setString(1, mUser.getNome());
+            mPreparedStatement.setString(2, mUser.getSenha());
+            mPreparedStatement.setString(3, mUser.getDataNasc());
             mPreparedStatement.setString(4, mUser.getCpf());
-            mPreparedStatement.setString(5, mUser.getUsertel());
-            mPreparedStatement.setString(6, mUser.getUsergender());
-            mPreparedStatement.setString(7, mUser.getUserAccess());
-            mPreparedStatement.setString(8, mUser.getResetPassword());
+            mPreparedStatement.setString(5, mUser.getTelefone());
+            mPreparedStatement.setString(6, mUser.getGenero());
+            mPreparedStatement.setString(7, mUser.getEmail());
             mPreparedStatement.setInt(8, mUser.getId());
-            mPreparedStatement.setString(8, mUser.getmEmail());
 
             vResponse = mPreparedStatement.executeUpdate(); //1 se foi com sucesso
 
@@ -70,199 +100,26 @@ public class UserDao {
         return vResponse;
     }
 
-    public static int DeleteUser(User mUser, Context mContext) {
-        int vResponse = 0;
-
-        String mSql;
-        try {
-            mSql = "DELETE FROM usuario WHERE id=?";
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-
-            mPreparedStatement.setInt(1, mUser.getId());
-
-            vResponse = mPreparedStatement.executeUpdate(); //1 se foi com sucesso
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-        }
-
-        return vResponse;
-    }
-
-    public static int DeleteAllUser(Context mContext) {
-        int vResponse = 0;
-
-        String mSql;
-        try {
-            mSql = "DELETE FROM usuario";
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-
-            vResponse = mPreparedStatement.executeUpdate(); //1 se foi com sucesso
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-        }
-
-        return vResponse;
-    }
-
-    public static List<User> listAllUsers(Context mContext) {
-        List<User> mUserList = null;
-        String mSql;
-
-        try {
-            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO ORDER BY NOME ASC";
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-            ResultSet mResultSet = mPreparedStatement.executeQuery();
-            mUserList = new ArrayList<User>();
-        while(mResultSet.next()){
-            mUserList.add(new User(
-                    mResultSet.getInt(1),
-                    mResultSet.getString(2),
-                    mResultSet.getString(3),
-                    mResultSet.getString(4),
-                    mResultSet.getString(5),
-                    mResultSet.getString(6),
-                    mResultSet.getString(7),
-                    mResultSet.getString(8),
-                    mResultSet.getString(9),
-                    mResultSet.getString(10)
 
 
 
-            ));
-        }
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-
-        }
-        return mUserList;
-
-}
-    public static List<User> listAllUsersByStatus(int vStatus,Context mContext) {
-        List<User> mUserList = null;
-        String mSql;
-
-        try {
-            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO WHERE STATUS="+ vStatus +" ORDER BY NOME ASC";
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-            ResultSet mResultSet = mPreparedStatement.executeQuery();
-            mUserList = new ArrayList<User>();
-        while(mResultSet.next()){
-            mUserList.add(new User(
-                    mResultSet.getInt(1),
-                    mResultSet.getString(2),
-                    mResultSet.getString(3),
-                    mResultSet.getString(4),
-                    mResultSet.getString(5),
-                    mResultSet.getString(6),
-                    mResultSet.getString(7),
-                    mResultSet.getString(8),
-                    mResultSet.getString(9),
-                    mResultSet.getString(10)
 
 
 
-            ));
-        }
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-
-        }
-        return mUserList;
-
-}
-    public static List<User> listAllUsersById(int vId,Context mContext) {
-        List<User> mUserList = null;
-        String mSql;
-
-        try {
-            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, EMAIL, CPF FROM USUARIO WHERE ID="+ vId +" ORDER BY NOME ASC";
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-            ResultSet mResultSet = mPreparedStatement.executeQuery();
-            mUserList = new ArrayList<User>();
-        while(mResultSet.next()){
-            mUserList.add(new User(
-                    mResultSet.getInt(1),
-                    mResultSet.getString(2),
-                    mResultSet.getString(3),
-                    mResultSet.getString(4),
-                    mResultSet.getString(5),
-                    mResultSet.getString(6),
-                    mResultSet.getString(7),
-                    mResultSet.getString(8),
-                    mResultSet.getString(9),
-                    mResultSet.getString(10)
-
-
-
-            ));
-        }
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-
-        }
-        return mUserList;
-
-}
-    public static List<User> SearchUsersByName(String mName,Context mContext) {
-        List<User> mUserList = null;
-        String mSql;
-
-        try {
-            mSql = "SELECT ID, NOME, DATANASC, GENERO, TELEFONE, NIVELACESSO, STATUSUSUARIO, RESETSENHA, SENHA, CPF FROM USUARIO WHERE NOME LIKE'%="+ mName +"%' ORDER BY NOME ASC";
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-            ResultSet mResultSet = mPreparedStatement.executeQuery();
-            mUserList = new ArrayList<User>();
-        while(mResultSet.next()){
-            mUserList.add(new User(
-                    mResultSet.getInt(1),
-                    mResultSet.getString(2),
-                    mResultSet.getString(3),
-                    mResultSet.getString(4),
-                    mResultSet.getString(5),
-                    mResultSet.getString(6),
-                    mResultSet.getString(7),
-                    mResultSet.getString(8),
-                    mResultSet.getString(9),
-                    mResultSet.getString(10)
-
-
-
-            ));
-        }
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-
-        }
-        return mUserList;
-
-}
 
     public static String authenticateUser(User mUser, Context mContext) {
         String mResponse = "";
-        String mSql = "SELECT id,nome,email,senha FROM usuario WHERE senha = ? AND email = ?";
+        String mSql = "SELECT id,nome,email,senha FROM Usuario WHERE senha = ? AND email = ?";
         String userId = ""; // Variável para armazenar o ID do usuário
 
         try {
-            String codedPassword = Base64.getEncoder().encodeToString(mUser.getPassword().getBytes("utf-8"));
+            String codedPassword = Base64.getEncoder().encodeToString(mUser.getSenha().getBytes("utf-8"));
             PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
             mPreparedStatement.setString(1, codedPassword);
-            mPreparedStatement.setString(2, mUser.getmEmail());
+            mPreparedStatement.setString(2, mUser.getEmail());
             ResultSet mResultSet = mPreparedStatement.executeQuery();
             while (mResultSet.next()) {
                 mResponse = mResultSet.getString(2);
-                userId = mResultSet.getString(1); // ID do usuário
             }
         } catch (Exception e) {
             mResponse = "Exception";
@@ -274,26 +131,33 @@ public class UserDao {
         return userId + "," + mResponse;
     }
 
-    public static User getUserById(int userId, Context mContext) {
+
+
+    public static User getUserByEmail(String userEmail, Context context) {
         User user = null;
-        String mSql = "SELECT nome, email, cpf, telefone, genero FROM Usuario WHERE id = ?";
+        String sql = "SELECT id, nome, senha, dataNasc, cpf, telefone, genero FROM Usuario WHERE email = ?";
 
         try {
-            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
-            mPreparedStatement.setInt(1, userId);
+            PreparedStatement preparedStatement = MSSQLConnectionHelper.getConnection(context).prepareStatement(sql);
+            preparedStatement.setString(1, userEmail);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            ResultSet mResultSet = mPreparedStatement.executeQuery();
+            if (resultSet.next()) {
+                // Obtenha os dados do usuário a partir do ResultSet
+                int id = resultSet.getInt("id");
+                String nome = resultSet.getString("nome");
+                String senha = resultSet.getString("senha");
+                String dataNasc = resultSet.getString("dataNasc");
+                String cpf = resultSet.getString("cpf");
+                String telefone = resultSet.getString("telefone");
+                String genero = resultSet.getString("genero");
+                String email = userEmail;
 
-            if (mResultSet.next()) {
-                // Preencha o objeto User com os dados do usuário
-                user = new User(
-                        mResultSet.getString("nome"),
-                        mResultSet.getString("email"),
-                        mResultSet.getString("cpf"),
-                        mResultSet.getString("telefone"),
-                        mResultSet.getString("genero")
-                );
+                // Crie uma instância de User com os dados obtidos
+                user = new User(id, nome, email, senha, dataNasc, cpf, telefone, null, genero);
+
             }
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }

@@ -23,27 +23,39 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_fragment, container, false);
 
-        // Obtenha as referências dos TextViews no layout XML
-        TextView textViewNome = view.findViewById(R.id.username);
-        TextView textViewEmail = view.findViewById(R.id.email);
-        TextView textViewCpf = view.findViewById(R.id.cpf);
-        TextView textViewTelefone = view.findViewById(R.id.telefone);
-        TextView textViewGenero = view.findViewById(R.id.genero);
-
-        // Obtenha os dados do usuário das SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyAppName", Context.MODE_PRIVATE);
-        String nome = sharedPreferences.getString("Nome", "Nome Padrão");
-        String email = sharedPreferences.getString("Email", "Email Padrão");
-        String cpf = sharedPreferences.getString("CPF", "CPF Padrão");
-        String telefone = sharedPreferences.getString("Telefone", "Telefone Padrão");
-        String genero = sharedPreferences.getString("Gênero", "Gênero Padrão");
 
-        // Defina os textos dos TextViews com os dados do usuário
-        textViewNome.setText(nome);
-        textViewEmail.setText(email);
-        textViewCpf.setText(cpf);
-        textViewTelefone.setText(telefone);
-        textViewGenero.setText(genero);
+
+        String userEmail = sharedPreferences.getString("Email", ""); // Substitua pelo email do usuário logado
+        UserDao userDao = new UserDao();
+        User user = userDao.getUserByEmail(userEmail, getContext());
+
+        if (user != null) {
+            // Agora você tem os dados do usuário, exiba-os no frontend
+            String nome = user.getNome();
+            String email = user.getEmail();
+            String cpf = user.getCpf();
+            String dataNasc = user.getDataNasc();
+            String telefone = user.getTelefone();
+            String genero = user.getGenero();
+
+            TextView mTextViewNome = view.findViewById(R.id.username); // Certifique-se de que o ID está correto
+            TextView mTextViewEmail = view.findViewById(R.id.email);
+            TextView mTextViewCpf = view.findViewById(R.id.cpf);
+            TextView mTextViewTelefone = view.findViewById(R.id.telefone);
+            TextView mTextViewGenero = view.findViewById(R.id.genero);
+            TextView mTextViewDataNasc = view.findViewById(R.id.data);
+
+
+            // Atualize os TextViews ou elementos do frontend com os dados obtidos
+            mTextViewNome.setText(nome);
+            mTextViewEmail.setText(email);
+            mTextViewCpf.setText(cpf);
+            mTextViewTelefone.setText(telefone);
+            mTextViewGenero.setText(genero);
+            mTextViewDataNasc.setText(dataNasc);
+
+        }
 
         return view;
     }
