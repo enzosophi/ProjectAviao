@@ -249,26 +249,55 @@ public class UserDao {
 
 }
 
-public static  String authenticateUser(User mUser, Context mContext){
-        String mResponse="";
-        String mSql="SELECT id,nome,email,senha FROM usuario WHERE senha = ? AND email = ?";
-        try{
+    public static String authenticateUser(User mUser, Context mContext) {
+        String mResponse = "";
+        String mSql = "SELECT id,nome,email,senha FROM usuario WHERE senha = ? AND email = ?";
+        String userId = ""; // Variável para armazenar o ID do usuário
+
+        try {
             String codedPassword = Base64.getEncoder().encodeToString(mUser.getPassword().getBytes("utf-8"));
-            PreparedStatement mPreparedStatement =MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
+            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
             mPreparedStatement.setString(1, codedPassword);
             mPreparedStatement.setString(2, mUser.getmEmail());
-            ResultSet mResultSet= mPreparedStatement.executeQuery();
-            while (mResultSet.next()){
+            ResultSet mResultSet = mPreparedStatement.executeQuery();
+            while (mResultSet.next()) {
                 mResponse = mResultSet.getString(2);
-                //mResponse = mResultSet.getString("Email");
-
-
+                userId = mResultSet.getString(1); // ID do usuário
             }
-        }catch (Exception e){
-            mResponse ="Exception";
+        } catch (Exception e) {
+            mResponse = "Exception";
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
         }
-        return mResponse;
-}
+
+        // Agora, você pode retornar o ID do usuário junto com a resposta
+        return userId + "," + mResponse;
+    }
+
+    public static User getUserById(int userId, Context mContext) {
+        User user = null;
+        String mSql = "SELECT nome, email, cpf, telefone, genero FROM Usuario WHERE id = ?";
+
+        try {
+            PreparedStatement mPreparedStatement = MSSQLConnectionHelper.getConnection(mContext).prepareStatement(mSql);
+            mPreparedStatement.setInt(1, userId);
+
+            ResultSet mResultSet = mPreparedStatement.executeQuery();
+
+            if (mResultSet.next()) {
+                // Preencha o objeto User com os dados do usuário
+                user = new User(
+                        mResultSet.getString("nome"),
+                        mResultSet.getString("email"),
+                        mResultSet.getString("cpf"),
+                        mResultSet.getString("telefone"),
+                        mResultSet.getString("genero")
+                );
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        return user;
+    }
 }

@@ -22,6 +22,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
 
 
+
+
     }
     public class ClickOnBottomNavigationView implements NavigationBarView.OnItemSelectedListener{
         @Override

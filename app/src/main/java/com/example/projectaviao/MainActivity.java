@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         mStringEmail = String.valueOf(mEditTextEmail.getText()).toLowerCase(Locale.ROOT);
         mStringPassword = String.valueOf(mEditTextPassword.getText());
 
-
         if (!isValidEmail(mStringEmail)) {
             String mTextMessage = getString(R.string.text_email_not_valid);
             Toast.makeText(getApplicationContext(), mTextMessage, Toast.LENGTH_SHORT).show();
@@ -74,34 +73,39 @@ public class MainActivity extends AppCompatActivity {
             String mTextMessage = getString(R.string.text_Password_not_valid);
             Toast.makeText(getApplicationContext(), mTextMessage, Toast.LENGTH_SHORT).show();
             return;
-
         }
 
-
         User mUser = new User(mStringEmail, mStringPassword);
+        String result = UserDao.authenticateUser(mUser, getApplicationContext());
 
-        String mResult = UserDao.authenticateUser(mUser, getApplicationContext());
+        // Verifique se result não está vazio e não é uma exceção
+        if (!result.isEmpty() && !result.equals("Exception")) {
+            // Divida a string result para obter o ID do usuário e a resposta
+            String[] parts = result.split(",");
+            if (parts.length == 2) {
+                String userId = parts[0];
+                String mResponse = parts[1];
 
-         if(mResult.isEmpty()|| mResult.equals("") || mResult.equals("Exception")){
-             String mTextMessage;
-             mTextMessage=getString(R.string.text_email_or_password_incorrect);
-             if (mResult.equals("Exception")){
+                SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+                mEditor.putString("logged", "True");
+                mEditor.putString("Email", mStringEmail);
+                mEditor.putString("Password", mResponse);
+                mEditor.putString("UserID", userId); // ID do usuário
+                mEditor.apply();
 
-             }
-Toast.makeText(getApplicationContext(), mTextMessage, Toast.LENGTH_SHORT).show();
-         return;
-         }
-SharedPreferences.Editor mEditor =mSharedPreferences.edit();
-         mEditor.putString("logged", "True");
-         mEditor.putString("Email",mStringEmail);
-         mEditor.putString( "Password",mResult);
-         mEditor.apply();
-
-         //clicou no botão vai para tela HomeActivity
-         Intent mIntent = new Intent(getApplicationContext(), HomeActivity.class);
-    mIntent.putExtra("EXTRA_FULL_NAME", mResult);
-    startActivity(mIntent);
-    finish();
+                // Clicou no botão vai para a tela HomeActivity
+                Intent mIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                mIntent.putExtra("EXTRA_FULL_NAME", mResponse);
+                startActivity(mIntent);
+                finish();
+            } else {
+                String mTextMessage = getString(R.string.text_email_or_password_incorrect);
+                Toast.makeText(getApplicationContext(), mTextMessage, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            String mTextMessage = getString(R.string.text_email_or_password_incorrect);
+            Toast.makeText(getApplicationContext(), mTextMessage, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class ClickButtonLogin implements  View.OnClickListener{

@@ -15,6 +15,7 @@ public class User {
 
 
 
+
 //nome, email, senha, dataNasc, cpf, telefone,genero, nivelAcesso, statusUsuario
 
     @Override
@@ -34,6 +35,13 @@ public class User {
                 '}';
     }
 
+    public User(String nome, String email, String cpf, String telefone, String genero) {
+        this.mUsername = nome;
+        this.mEmail = email;
+        this.mCpf = cpf;
+        this.mUsertel = telefone;
+        this.mUsergender = genero;
+    }
 
     public User(int id, String username, Long datenasc, String cpf, String usertel, String usergender, String userAccess, String userStatus, String resetPassword, String password, String email) {
         this.mId = id;
