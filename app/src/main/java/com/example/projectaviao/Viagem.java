@@ -27,6 +27,9 @@ public class Viagem {
         this.quantidadePassageiros = quantidadePassageiros;
     }
 
+    public Viagem(int id, String partida, String destino, String data, String horario, String aeronave) {
+    }
+
     public int getId() {
         return id;
     }

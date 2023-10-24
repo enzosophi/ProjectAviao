@@ -53,11 +53,9 @@ public class ViagemDao {
         ResultSet resultSet = null;
 
         try {
-            // Estabeleça uma conexão com o banco de dados (substitua com o seu método de conexão)
-            connection = MSSQLConnectionHelper.getConnection();
 
             // Crie a consulta SQL para obter as viagens do usuário com base no idUsuario
-            String sql = "SELECT partida, destino, dataViagem, horarioViagem, idAero FROM Viagem WHERE idUsuario = ?";
+            String sql = "SELECT id,partida, destino, dataViagem, horarioViagem, idAero FROM Viagem WHERE idUsuario = ?";
 
             // Prepare a consulta
             preparedStatement = connection.prepareStatement(sql);
@@ -68,13 +66,14 @@ public class ViagemDao {
 
             // Preencha a lista de viagens com os resultados da consulta
             while (resultSet.next()) {
-                String partida = resultSet.getString("Partida");
-                String destino = resultSet.getString("Destino");
-                String data = resultSet.getString("Data");
-                String horario = resultSet.getString("Horario");
-                String aeronave = resultSet.getString("Aeronave");
+                int id = resultSet.getInt("id");
+                String partida = resultSet.getString("partida");
+                String destino = resultSet.getString("destino");
+                String data = resultSet.getString("dataViagem");
+                String horario = resultSet.getString("horario");
+                String aeronave = resultSet.getString("aeronave");
 
-                Viagem viagem = new Viagem(partida, destino, data, horario, aeronave);
+                Viagem viagem = new Viagem(id,partida, destino, data, horario, aeronave);
                 viagens.add(viagem);
             }
         } catch (SQLException e) {
@@ -82,10 +81,8 @@ public class ViagemDao {
             e.printStackTrace();
         } finally {
             // Feche as conexões, declarações e resultados
-            suaClasseDeConexao.close(resultSet, preparedStatement, connection);
         }
 
-        return viagens;
         return viagens;
     }
 
